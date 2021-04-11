@@ -33,7 +33,7 @@ function logAction(_action, _place) {
         const newVal = localStorage.getItem(_action);
         console.log(newVal + "to to ");
     */
-    //<---------- TAK TO TAM DZIAŁA ALE JEST COŚLEPSZEGO DO PRZETESTOWANIA 
+    //<---------- TAK TO TAM DZIAŁA ALE JEST COŚ LEPSZEGO DO PRZETESTOWANIA 
     localStorage.setItem(_action, JSON.stringify(logEvent));
     let storageObject = JSON.parse(localStorage.getItem(_action));
     console.log(storageObject.action);

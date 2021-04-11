@@ -1,5 +1,5 @@
 const CACHE_NAME = "static_cache"
-const STATIC_ASSETS = [
+let STATIC_ASSETS = [
     '/index.html',
     '/script.js'
 ]

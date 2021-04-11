@@ -1,10 +1,11 @@
-const Cache_name = "static_cache"
+const CACHE_NAME = "static_cache"
 const STATIC_ASSETS = [
-    '/index.html'
+    '/index.html',
+    '/script.js'
 ]
 
 async function preCache() {
-    const cache = await caches.open(Cache_name)
+    const cache = await caches.open(CACHE_NAME)
     return cache.addAll(STATIC_ASSETS)
 }
 

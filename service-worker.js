@@ -1,3 +1,4 @@
+/*
 const Cache_name = "static_cache"
 const Static_assets = [
     '/index.html'
@@ -28,3 +29,13 @@ async function fetchAssets(event) {
 self.addEventListener('fetch', event => {
     console.log("fetched");
 })
+*/
+
+self.addEventListener('install', function(event) {
+    event.waitUntil(
+        caches.open('my-cache-v1')
+        .then(function(cache) {
+            return cache.addAll(['/', '/styles/main.css', '/scripts/main.js']);
+        })
+    );
+});

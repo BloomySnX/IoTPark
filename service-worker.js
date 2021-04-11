@@ -1,7 +1,7 @@
 const CACHE_NAME = "static_cache"
 const STATIC_ASSETS = [
-    '/index.html',
-    '/script.js'
+    'index.html',
+    'script.js'
 ]
 
 async function preCache() {

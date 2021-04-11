@@ -1,11 +1,11 @@
 const Cache_name = "static_cache"
-const Static_assets = [
+const STATIC_ASSETS = [
     '/index.html'
 ]
 
 async function preCache() {
     const cache = await caches.open(Cache_name)
-    return cache.addAll(Static_assets)
+    return cache.addAll(STATIC_ASSETS)
 }
 
 self.addEventListener('install', event => {
@@ -27,4 +27,5 @@ async function fetchAssets(event) {
 
 self.addEventListener('fetch', event => {
     console.log("fetched");
+    event.respondWith(fetchAssets(event))
 })

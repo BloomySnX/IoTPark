@@ -66,5 +66,31 @@ class ParkingDb {
 
         }
     }
+    getFormData() {
+        return {
+            action: document.querySelector('_action').value,
+            arplacemy: document.getElementById('_place').value,
+            date: new Date()
+        };
+    }
+
+    formData() {
+        // Tworzysz funkcję asynchroniczną
+        return new Promise((resolve, reject) => {
+            // Łączysz się z odpowiednią indexedDB
+            let Parking = window.indexedDB.open('messageDb');
+            // Jak się uda to wrzucasz dane
+            Parking.onsuccess = event => {
+                    let objStore = Parking.result.transaction('messageObjStore', 'readwrite')
+                        .objectStore('messageObjStore');
+                    objStore.add(this.getFormData());
+                    resolve();
+                }
+                // Jak nie to nie :)
+            Parking.onerror = err => {
+                reject(err);
+            }
+        });
+    }
 
 }

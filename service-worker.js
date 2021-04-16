@@ -1,7 +1,8 @@
 const CACHE_NAME = "dowolny-string";
 let filesToCache = ["/",
-    "/index.html",
-    "script.js"
+    "index.html",
+    "script.js",
+    "style.css"
 ];
 self.addEventListener("install", function(evt) {
     evt.waitUntil(

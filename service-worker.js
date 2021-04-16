@@ -72,3 +72,64 @@ self.addEventListener('cookiechange', (event) => {
         }
     }
 });
+
+function getDataFromDb() {
+    return new Promise((resolve, reject) => {
+        let db = indexedDB.open('messageDb');
+
+        db.onsuccess = () => {
+                // Pobierz zawartośc bazy
+                db.result.transaction('messageObjStore').objectStore('messageObjStore').getAll()
+                    .onsuccess = (event) => {
+                        // Podaj zawarotśc dalej
+                        resolve(event.target.result);
+                    }
+            }
+            // W razie bledu wykonaj odpowiednią akcję
+        db.onerror = (err) => {
+            reject(err);
+        }
+    });
+}
+
+self.onsync = event => {
+    if (event.tag === 'message-to-king') {
+        event.waitUntil(synchronize());
+    }
+}
+
+function getDataFromDb() {
+    return new Promise((resolve, reject) => {
+        let db = indexedDB.open('messageDb');
+        db.onsuccess = () => {
+            db.result.transaction('messageObjStore').objectStore('messageObjStore').getAll()
+                .onsuccess = event => {
+                    resolve(event.target.result);
+                }
+        }
+        db.onerror = err => {
+            reject(err);
+        }
+    });
+}
+
+function sendToServer(response) {
+    return fetch('your server address', {
+            method: 'POST',
+            body: JSON.stringify(response),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .catch(err => {
+            return err;
+        });
+}
+
+function synchronize() {
+    return getDataFromDb()
+        .then(sendToServer)
+        .catch(function(err) {
+            return err;
+        });
+}

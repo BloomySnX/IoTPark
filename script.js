@@ -42,3 +42,29 @@ function logAction(_action, _place) {
 
 
 }
+
+class ParkingDb {
+    constructor() {
+        this.button = document.querySelector('enterBtn');
+    }
+
+    init() {
+        this.initializeIndexedDb();
+        this.registerServiceWorker();
+    }
+
+    initializeIndexedDb() {
+        let Parking = window.indexedDB.open('messageDb');
+
+        Parking.onupgradeneeded = (event) => {
+            let db = event.target.result;
+            let messageObjStore = db.createObjectStore('messageObjStore', { autoIncrement: true });
+
+            messageObjStore.createIndex('action', 'action', { unique: false });
+            messageObjStore.createIndex('place', 'place', { unique: false });
+            messageObjStore.createIndex('date', 'date', { unique: true });
+
+        }
+    }
+
+}

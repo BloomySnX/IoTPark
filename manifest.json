@@ -1,0 +1,9 @@
+{
+    "short_name": "Strona_PWA",
+    "name": "Strona_PWA",
+
+    "start_url": "https://iotparkpwa.herokuapp.com/",
+    "background_color": "#000",
+    "theme_color": "#317EFB",
+    "display": "fullscreen"
+}

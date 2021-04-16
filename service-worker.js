@@ -1,32 +1,73 @@
-const CACHE_NAME = "static_cache"
-let STATIC_ASSETS = [
-    '/index.html',
-    '/script.js'
-]
+const CACHE_NAME = "dowolny-string";
+let filesToCache = ["/",
+    "/index.html",
+    "script.js"
+];
+self.addEventListener("install", function(evt) {
+    evt.waitUntil(
+        caches
+        .open(CACHE_NAME)
+        .then(function(cache) {
+            return cache.addAll(filesToCache);
+        })
+        .catch(function(err) {
 
-async function preCache() {
-    const cache = await caches.open(CACHE_NAME)
-    return cache.addAll(STATIC_ASSETS)
+        })
+    );
+});
+self.addEventListener("fetch", function(evt) {
+
+    evt.respondWith(
+
+        fetch(evt.request).catch(function() {
+
+            return caches.match(evt.request);
+        })
+    );
+});
+
+function isSuccessful(response) {
+    return response &&
+        response.status === 200 &&
+        response.type === 'basic';
 }
 
-self.addEventListener('install', event => {
-    console.log("installed");
-    event.waitUntil(preCache())
-})
-self.addEventListener('activate', event => {
-    console.log("actived");
-})
-async function fetchAssets(event) {
-    try {
-        const response = await fetch(event.request)
-        return response
-    } catch (err) {
-        const cache = await caches.open(Cache_name)
-        return cache.match(event.request)
+self.addEventListener('fetch', function(event) {
+    event.respondWith(
+        caches.match(event.request)
+        .then(function(response) {
+            if (response) {
+                return response;
+            }
+
+            return fetch(event.request.clone())
+                .then(function(response) {
+                    if (!isSuccessful(response)) {
+                        return response;
+                    }
+
+                    caches.open(CACHE_NAME)
+                        .then(function(cache) {
+                            cache.put(event.request, response.clone());
+                        });
+
+                    return response;
+                });
+        })
+    );
+});
+
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        cookieStore.subscribeToChanges([{ name: 'session_id' }])
+    );
+});
+
+self.addEventListener('cookiechange', (event) => {
+    for (const cookie of event.deleted) {
+        if (cookie.name === 'session_id') {
+            indexedDB.deleteDatabase('user_cache');
+            break;
+        }
     }
-}
-
-self.addEventListener('fetch', event => {
-    console.log("fetched");
-    event.respondWith(fetchAssets(event))
-})
+});

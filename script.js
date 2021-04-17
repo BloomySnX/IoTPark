@@ -51,89 +51,101 @@ function logAction(_action, _place) {
 
 class Parking {
     constructor() {
-        this.button = document.querySelector('enterBtn');
+        this.enterBtn = document.getElementById('enterBtn');
+        this.parkBtn = document.getElementById('parkBtn');
+        this.parkInput = document.getElementById('parkInput');
+        this.leaveBtn = document.getElementById('leaveBtn');
+        this.leaveInput = document.getElementById('leaveInput');
     }
-
     init() {
         this.initializeIndexedDb();
         this.registerServiceWorker();
     }
-
     initializeIndexedDb() {
-            let Wjazd = window.indexedDB.open('messageDb');
+        let messageLog = window.indexedDB.open('Parking');
 
-            Wjazd.onupgradeneeded = (event) => {
-                let db = event.target.result;
-                let messageObjStore = db.createObjectStore('messageObjStore', { autoIncrement: true });
+        messageLog.onupgradeneeded = (event) => {
+            let db = event.target.result;
+            let logObjStore = db.createObjectStore('logObjStore', { autoIncrement: true });
 
-                messageObjStore.createIndex('action', 'action', { unique: false });
-                messageObjStore.createIndex('place', 'place', { unique: false });
-                messageObjStore.createIndex('dateAdded', 'dateAdded', { unique: true });
-            }
+            logObjStore.createIndex('action', 'action', { unique: false });
+            logObjStore.createIndex('place', 'place', { unique: false });
+            logObjStore.createIndex('date', 'date', { unique: false });
         }
-        //tutaj zabawa
-    getFormData() {
+    }
+    logAction(_action, _place) {
         return {
-            name: _action,
+            action: _action,
             place: _place.value,
-            dateAdded: new Date()
+            date: new Date()
         };
     }
-
-    formDataToDb() {
+    formDataToDb(_action, _place) {
         return new Promise((resolve, reject) => {
-            let Wjazd = window.indexedDB.open('messageDb');
+            let messageLog = window.indexedDB.open('Parking');
 
-            Wjazd.onsuccess = event => {
-                let objStore = Wjazd.result.transaction('messageObjStore', 'readwrite')
-                    .objectStore('messageObjStore');
-                objStore.add(this.getFormData());
+            messageLog.onsuccess = event => {
+                let objStore = messageLog.result.transaction('logObjStore', 'readwrite')
+                    .objectStore('logObjStore');
+                objStore.add(this.logAction(_action, _place));
                 resolve();
             }
 
-            Wjazd.onerror = err => {
+            messageLog.onerror = err => {
                 reject(err);
             }
         });
     }
-
     formDataToServer() {
-        return fetch('your server url', {
-            method: 'POST',
-            body: JSON.stringify(this.getFormData()),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
-            console.log('Wiadomośc wysłana');
-        }).catch((err) => {
-            console.log(`Wystąpił błąd: ${err}`);
-        })
-    }
+        console.log(JSON.stringify(this.getFormData()));
 
+    }
     registerServiceWorker() {
         if (navigator.serviceWorker) {
             navigator.serviceWorker.getRegistrations()
                 .then(registrations => {
                     if (registrations.length === 0) {
-                        navigator.serviceWorker.register('serviceWorker.js');
+                        navigator.serviceWorker.register('service-worker.js');
                     }
                 })
                 .then(() => {
                     return navigator.serviceWorker.ready;
                 })
                 .then(registration => {
-                    this.button.addEventListener('click', (event) => {
+                    this.newCarButton.addEventListener('click', (event) => {
                         event.preventDefault();
-                        this.formDataToDb().then(function() {
+                        this.formDataToDb("Wjazd", 0).then(function() {
                             if (registration.sync) {
-                                registration.sync.register('message-to-king')
+                                registration.sync.register('message-to-log')
                                     .catch(function(err) {
                                         return err;
                                     })
                             }
                         });
                     })
+                    this.parkButton.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        this.formDataToDb("Parkowanie", parkInput).then(function() {
+                            if (registration.sync) {
+                                registration.sync.register('message-to-log')
+                                    .catch(function(err) {
+                                        return err;
+                                    })
+                            }
+                        });
+                    })
+                    this.leaveButton.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        this.formDataToDb("Opuszczanie", leaveInput).then(function() {
+                            if (registration.sync) {
+                                registration.sync.register('message-to-log')
+                                    .catch(function(err) {
+                                        return err;
+                                    })
+                            }
+                        });
+                    })
+
                 })
         } else {
             this.button.addEventListener('click', () => {
@@ -142,9 +154,7 @@ class Parking {
         }
     }
 }
-
-const coreJs = new kingsPage();
-
+const coreJs = new eparking();
 window.addEventListener('load', () => {
     coreJs.init();
 });

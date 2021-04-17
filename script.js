@@ -74,7 +74,7 @@ class Parking {
                             }
                         });
                     })
-                    this.parkButton.addEventListener('click', (event) => {
+                    this.parkBtn.addEventListener('click', (event) => {
                         event.preventDefault();
                         this.formDataToDb("Parkowanie", parkInput).then(function() {
                             if (registration.sync) {
@@ -85,7 +85,7 @@ class Parking {
                             }
                         });
                     })
-                    this.leaveButton.addEventListener('click', (event) => {
+                    this.leaveBtn.addEventListener('click', (event) => {
                         event.preventDefault();
                         this.formDataToDb("Opuszczanie", leaveInput).then(function() {
                             if (registration.sync) {

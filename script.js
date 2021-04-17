@@ -6,10 +6,12 @@ class Parking {
         this.leaveBtn = document.getElementById('leaveBtn');
         this.leaveInput = document.getElementById('leaveInput');
     }
+
     init() {
         this.initializeIndexedDb();
         this.registerServiceWorker();
     }
+
     initializeIndexedDb() {
         let messageLog = window.indexedDB.open('Parking');
 
@@ -61,7 +63,7 @@ class Parking {
                     return navigator.serviceWorker.ready;
                 })
                 .then(registration => {
-                    this.newCarButton.addEventListener('click', (event) => {
+                    this.enterBtn.addEventListener('click', (event) => {
                         event.preventDefault();
                         this.formDataToDb("Wjazd", 0).then(function() {
                             if (registration.sync) {

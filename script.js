@@ -103,7 +103,7 @@ class Parking {
         }
     }
 }
-const coreJs = new eparking();
+const coreJs = new Parking();
 window.addEventListener('load', () => {
     coreJs.init();
 });

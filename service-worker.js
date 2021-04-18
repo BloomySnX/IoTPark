@@ -4,13 +4,6 @@ let filesToCache = ["/",
     "script.js",
     "style.css"
 ];
-
-self.onsync = event => {
-    if (event.tag === 'message-to-log') {
-        event.waitUntil(synchronize());
-    }
-}
-
 self.addEventListener("install", function(evt) {
     evt.waitUntil(
         caches
@@ -79,44 +72,3 @@ self.addEventListener('cookiechange', (event) => {
         }
     }
 });
-
-function getDataFromDb() {
-    return new Promise((resolve, reject) => {
-        let db = indexedDB.open('Parking');
-
-        db.onsuccess = () => {
-                // Pobierz zawartośc bazy
-                db.result.transaction('logObjStore').objectStore('logObjStore').getAll()
-                    .onsuccess = (event) => {
-                        // Podaj zawarotśc dalej
-                        resolve(event.target.result);
-                    }
-            }
-            // W razie bledu wykonaj odpowiednią akcję
-        db.onerror = (err) => {
-            reject(err);
-        }
-    });
-}
-
-function sendToServer(response) {
-    console.log(JSON.stringify(response));
-    // return fetch('your server address', {
-    //     method: 'POST',
-    //     body: JSON.stringify(response),
-    //     headers:{
-    //         'Content-Type': 'application/json'
-    //     }
-    // })
-    // .catch(err => {
-    //     return err;
-    // });
-}
-
-function synchronize() {
-    return getDataFromDb()
-        .then(sendToServer)
-        .catch(function(err) {
-            return err;
-        });
-}

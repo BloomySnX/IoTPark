@@ -98,7 +98,7 @@ function getDataFromDb() {
 }
 
 function sendToServer(response) {
-    console.log(JSON.stringify(response));
+    localStorage.log(JSON.stringify(response));
 
 }
 

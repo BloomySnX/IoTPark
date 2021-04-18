@@ -48,7 +48,7 @@ class Parking {
         });
     }
     formDataToServer() {
-        console.log(JSON.stringify(this.getFormData()));
+        localStorage.log(JSON.stringify(this.getFormData()));
         var date = new Date();
 
     }

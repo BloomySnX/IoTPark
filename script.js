@@ -51,16 +51,6 @@ class Parking {
         console.log(JSON.stringify(this.getFormData()));
         var date = new Date();
 
-        var exist = JSON.parse(localStorage.getItem("allEvents"));
-        if (exist == null) exist = [];
-        var logEvent = {
-            action: _action,
-            place: _place.value,
-            date: date
-        };
-        exist.push(logEvent);
-        localStorage.setItem("allEvents", JSON.stringify(exist));
-
     }
     registerServiceWorker() {
         if (navigator.serviceWorker) {

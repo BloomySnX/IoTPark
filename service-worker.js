@@ -6,7 +6,7 @@ let filesToCache = ["/",
 ];
 
 self.onsync = event => {
-    if (event.tag === 'message-to-log') {
+    if (event.tag === 'messageLog') {
         event.waitUntil(synchronize());
     }
 }
@@ -85,14 +85,12 @@ function getDataFromDb() {
         let db = indexedDB.open('Parking');
 
         db.onsuccess = () => {
-                // Pobierz zawartośc bazy
-                db.result.transaction('logObjStore').objectStore('logObjStore').getAll()
-                    .onsuccess = (event) => {
-                        // Podaj zawarotśc dalej
-                        resolve(event.target.result);
-                    }
-            }
-            // W razie bledu wykonaj odpowiednią akcję
+            // Pobierz zawartośc bazy
+            db.result.transaction('logObjStore').objectStore('logObjStore').getAll()
+                .onsuccess = (event) => {
+                    resolve(event.target.result);
+                }
+        }
         db.onerror = (err) => {
             reject(err);
         }
@@ -101,16 +99,7 @@ function getDataFromDb() {
 
 function sendToServer(response) {
     console.log(JSON.stringify(response));
-    // return fetch('your server address', {
-    //     method: 'POST',
-    //     body: JSON.stringify(response),
-    //     headers:{
-    //         'Content-Type': 'application/json'
-    //     }
-    // })
-    // .catch(err => {
-    //     return err;
-    // });
+
 }
 
 function synchronize() {

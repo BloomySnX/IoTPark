@@ -31,7 +31,6 @@ function logAction(_action, _place) {
 
 
 
-    localStorage.setItem("logEvent", JSON.stringify(logEvent));
     exist.push(logEvent);
     localStorage.setItem("allEvents", JSON.stringify(exist));
 
@@ -40,7 +39,7 @@ function logAction(_action, _place) {
 
 
     cookieStore.get('session_id')
-    cookieStore.set({ name: storageObject.action, value: storageObject.place });
+    cookieStore.set({ name: logEvent.action, value: logEvent.place });
 
 }
 

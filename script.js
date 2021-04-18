@@ -150,8 +150,5 @@ function logAction(_action, _place) {
     console.log(storageObject.place);
     console.log(storageObject.date);
 
-    constructor() {
-        this.button = document.querySelector('#form-button');
-    }
 
 }

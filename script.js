@@ -19,7 +19,7 @@ leaveBtn.addEventListener('click', function() {
 function logAction(_action, _place) {
     var date = new Date();
 
-    var exist = JSON.parse(localStorage.getItem(_action));
+    var exist = JSON.parse(localStorage.getItem("allEvents"));
     if (exist == null) exist = [];
 
 

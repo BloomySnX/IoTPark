@@ -24,16 +24,7 @@ function logAction(_action, _place) {
         place: _place.value,
         date: date
     };
-    /*
-        logArray.push(logEvent);
-        _place.value = "";
 
-        console.log('logEvent', logEvent)
-        localStorage.setItem(_action, logArray);
-        const newVal = localStorage.getItem(_action);
-        console.log(newVal + "to to ");
-    */
-    //<---------- TAK TO TAM DZIAŁA ALE JEST COŚ LEPSZEGO DO PRZETESTOWANIA 
     localStorage.setItem(_action, JSON.stringify(logEvent));
     let storageObject = JSON.parse(localStorage.getItem(_action));
     console.log(storageObject.action);
@@ -41,4 +32,18 @@ function logAction(_action, _place) {
     console.log(storageObject.date);
 
 
+    cookieStore.get('session_id')
+    cookieStore.set({ name: storageObject.action, value: storageObject.place });
+
 }
+
+cookieStore.addEventListener('change', (event) => {
+    for (const cookie of event.changed) {
+        if (cookie.name === 'session_id')
+            sessionCookieChanged(cookie.value);
+    }
+    for (const cookie of event.deleted) {
+        if (cookie.name === 'session_id')
+            sessionCookieChanged(null);
+    }
+});
